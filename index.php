@@ -66,15 +66,17 @@ function chargerPage()
                                 <tr>
                                     <td class='td-table justify-content-center'>
                                         <form action=index.php method=GET>
-                                            <input class='form-group' type='text' placeholder='Login' name='login'/><br>
-                                            <input class='form-group' type='password' placeholder='Mot de passe' name='password'/><br>
+                                            <input class='form-group' type='text' placeholder='Login' name='login' required/><br>
+                                            <input class='form-group' type='password' placeholder='Mot de passe' name='password' required/><br>
                                             <input type='hidden' name='vue' value='compte'>
                                             <input type='hidden' name='action' value='verifLogin'/>
                                             <input class='btn btn-secondary mx-auto' type='submit' value='Accéder'/>
                                         </form>
                                     </td>
                                     <td class='justify-content-center td-table'>
-                                        <form href = 'index.php?vue=compte&action=nouveauLogin' method='post'>
+                                        <form action=index.php method=GET>
+											<input type='hidden' name='vue' value='compte'>
+                                            <input type='hidden' name='action' value='nouveauLogin'/>
                                             <input class='form-group' type='text' name='nomClient' placeholder='saisir votre nom'/><br>
                                             <input class='form-group' type='text' name='prenomClient' placeholder='Saisir votre prenom'/><br>
                                             <input class='form-group' type='text' name='emailClient' placeholder='Saisir votre email'/><br>

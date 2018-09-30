@@ -18,11 +18,11 @@ class accesBD
 	public function __construct()
 		{
 		// ORDI PROFSIO
-		$this->hote="PROFSIO\\SQLEXPRESS_2012";
+		$this->hote="172.16.0.50";
 		$this->port="";
-		$this->login="testcathy2";
-		$this->passwd="test";
-		$this->base="videoppe3";
+		$this->login="ALT18MOISAN";
+		$this->passwd="moisan123!";
+		$this->base="videoppe3groupe2";
 		
 		// ORDI DEV2
 		/*$this->hote = "localhost";
@@ -98,7 +98,7 @@ class accesBD
 		//génération automatique de l'identifiant
 		$sonId = $this->donneProchainIdentifiant("client","idClient");
 		
-		$requete = $this->conn->prepare("INSERT INTO CLIENT (nomClient,prenomClient, emailClient, dateAbonnementClient,loginClient, pwdClient) VALUES (?,?,?,?,?,?)");
+		$requete = $this->conn->prepare("INSERT INTO client (nomClient, prenomClient, emailClient, dateAbonnementClient, login, pwd, actif, admin) VALUES (?,?,?,?,?,?,?,?)");
 		//définition de la requête SQL
 		$requete->bindValue(1,$unNomClient);
 		$requete->bindValue(2,$unPrenomClient);
@@ -106,6 +106,8 @@ class accesBD
 		$requete->bindValue(4,$uneDateAbonnement);
 		$requete->bindValue(5,$unLoginClient);
 		$requete->bindValue(6,$unPwdClient);
+		$requete->bindValue(7,0);
+		$requete->bindValue(8,0);
 		//exécution de la requête SQL
 		if(!$requete->execute())
 		{
@@ -313,7 +315,7 @@ class accesBD
 		//$prochainId[0]=0;
 		//définition de la requête SQL
 		$stringQuery = $this->specialCase("SELECT * FROM ",$uneTable);
-		echo $stringQuery;
+		//echo $stringQuery;
 		$requete = $this->conn->prepare($stringQuery);
 		$requete->bindValue(1,$unIdentifiant);
 

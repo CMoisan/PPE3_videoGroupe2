@@ -13,9 +13,9 @@ Class conteneurClient
 		}
 	
 	//METHODE AJOUTANT UN Client------------------------------------------------------------------------------
-	public function ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement, $unLoginClient, $unPwdClient)
+	public function ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement, $unLoginClient, $unPwdClient, $unActifClient, $unAdminClient)
 		{
-		$unClient = new client($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement,$unLoginClient, $unPwdClient);
+		$unClient = new client($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement,$unLoginClient, $unPwdClient, $unActifClient, $unAdminClient);
 		$this->lesClients->append($unClient);
 			
 		}
@@ -31,7 +31,7 @@ Class conteneurClient
 		{
 		$liste = '';
 		foreach ($this->lesClients as $unClient)
-			{	$liste = $liste.'client : "'.$unClient->getNomClient().' - '.$unClient->getPrenomClient().' - '.$unClient->getEmailClient().' - '.$unClient->getDateAbonnementClient().'><br>';
+			{	$liste = $liste.'client : "'.$unClient->getNomClient().' - '.$unClient->getPrenomClient().' - '.$unClient->getEmailClient().' - '.$unClient->getDateAbonnementClient().' - '.$unClient->getActifClient().' - '.$unClient->getAdminClient().'><br>';
 			}
 		return $liste;
 		}
@@ -73,7 +73,38 @@ Class conteneurClient
 				$iClient->next();
 			}
 		return $leBonClient;
-		}		
+		}
+	public function donneObjetClientDepuisLogin($unLoginClient)
+	{	
+		$trouve=false;
+		$leBonClient=null;
+		//création d'un itérateur sur la collection lesClients
+		$iClient = $this->lesClients->getIterator();
+		//TQ on a pas trouvé le client et que l'on est pas arrivé au bout de la collection
+	//	echo '1';
+		while ((!$trouve)&&($iClient->valid()))
+			{
+		//		echo '2';
+			//SI le numéro du client courant correspond au numéro passé en paramètre
+		//	echo $unLoginClient;
+			//echo $iClient->current()->getLoginClient();
+			$unLoginClient = trim($unLoginClient);
+			//echo $unLoginClient;
+			if (trim($iClient->current()->getLoginClient())==$unLoginClient)
+				{
+				//maj du booléen
+			//	echo 'TROUVER';
+				$trouve=true;
+				//sauvegarde du client courant
+				$leBonClient = $iClient->current();
+				
+				}
+			//SINON on passe au client suivant
+			else
+				$iClient->next();
+			}
+		return $leBonClient;
+	}
 	public function verificationExistanceClient($unLogin, $unPassword)
 	{
 		//echo $unLogin."<br/>";
@@ -106,6 +137,25 @@ Class conteneurClient
 				}
 			}
 		return $trouve;
+	}
+	public function verifActifClient($unLogin)
+	{
+		$actif = false;
+	//	echo $unLogin;
+		$leClient = $this->donneObjetClientDepuisLogin($unLogin);
+	//	echo $leClient->getNomClient();
+		$siActif = $leClient->getActifClient();
+	//	echo $siActif;
+		if($siActif == 1)
+		{
+			$actif = true;
+		}
+		return $actif;
+	}
+	public function getMailClient($idClient)
+	{
+		$leClient = $this->donneObjetClientDepuisNumero($idClient);
+		return $leClient->getEmailClient();		
 	}
 	}
 	

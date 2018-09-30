@@ -97,11 +97,18 @@ class Controleur
 			case 'modifier' :
 				// ici il faut pouvoir modifier le mot de passe de l'utilisateur
 				require 'Vues/construction.php';
+			/*	echo "<form href = 'index.php?vue=compte&action=confirmation' method='get'>
+					  <input type='text' name='OldPassword' value='Tapez votre mot de passe actuel'/><br>
+					  <input type='text' name='NewPassword' value='Tapez votre nouveau mot de passe'/><br>
+					  <input type='text' name='NewPassword2' value='Confirmez votre nouveau mot de passe'/><br>
+					  <input type='submit' value='Valider'/>";*/
+				
 				break;
 			//CAS ajouter un utilisateur ------------------------------------------------------------------------------
 			case 'nouveauLogin' :
 				// ici il faut pouvoir recuperer un nouveau utilisateur
-				require 'Vues/construction.php';
+			$this->maVideotheque->ajouteUnClient($_GET['nomClient'], $_GET['prenomClient'], $_GET['emailClient'], $_GET['dateAbonnementClient'], $_GET['login'], $_GET['password']);
+				
 				break;	
 			//CAS verifier un utilisateur ------------------------------------------------------------------------------
 			case 'verifLogin' :
@@ -114,8 +121,15 @@ class Controleur
 						//si le client existe alors j'affiche le menu et la page visuGenre.php
 						if($resultat==1)
 						{
-							require 'Vues/menu.php';
-							echo $this->maVideotheque->listeLesGenres();	
+							$actif = $this->maVideotheque->verifActif($unLogin);
+						//	echo $actif;
+							if ($actif == true)
+							{	require 'Vues/menu.php';
+									echo $this->maVideotheque->listeLesGenres();
+							}else
+							{
+								echo "votre cheque n'a pas encore été reçu";
+							}							
 						}
 						else
 						{
@@ -130,7 +144,13 @@ class Controleur
 									</div>
 									<meta http-equiv='refresh' content='1;index.php'>";
 						}
-				break;	
+				break;
+		/*	case 'confirmation':
+			$AncienMdp = $_POST['OldPassword'];
+			$NouveauMdp = $_POST['NewPassword'];
+			$NouveauMdp2 = $_POST['NewPassword2'];
+			if($AncienMdp == $maVideotheque)
+			break;*/
 			}
 		}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

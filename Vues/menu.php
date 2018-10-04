@@ -16,7 +16,6 @@
                     </ul>
                 </ul>
             </li>
-            <input type="button" value="page précédente" onclick="javascript:history.back()">
         </ul>
 
         <ul class="nav navbar-nav ml-auto pos-avatar justify-content-end">

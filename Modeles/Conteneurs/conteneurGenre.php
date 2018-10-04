@@ -42,26 +42,28 @@ Class conteneurGenre
 	public function listeDesGenres()
 		{
 			?>
-			<table>
-</body>
-<tbody>
-	<tr>
+		<table>
+			</body>
+			<tbody>
+		<tr>
 		<?php
 
 		$tableau = $this->listePropreDesGenres();
 		$compteurTD = 0;
-		foreach ($tableau as $Libelle => $photo){
-		$compteurTD = $compteurTD+1;
+		foreach ($tableau as $Libelle => $photo)
+		{
+			$compteurTD = $compteurTD+1;
 			echo '<td>< <div class="photoContainer"><img class="accueilPhotosPays" href="Affichage.php?Id='.$photo.'" src=Images/'.$photo.'>';
-	echo '<form method="post" action="index.php?vue=film&action=genrefilm?Id='.$photo.'"><div class="accueilPhotosPaysOverlay">< <input type=submit div class="textOverlay" value='.$Libelle.'>  </input></form></div></div></div></td>';
-	if (($compteurTD % 4) == 0) {
-		echo '</tr><tr>';
-	}
+			echo '<form method="post" action="index.php?vue=Videotheque&action=choixGenre?Id='.$photo.'"><div class="accueilPhotosPaysOverlay">< <input type=submit div class="textOverlay" value='.$Libelle.'>  </input></form></div></div></div></td>';
+			if (($compteurTD % 4) == 0)
+			{
+				echo '</tr><tr>';
+			}
 		}
 		?>
-	</tr>
-</tbody>
-</table>
+			</tr>
+			</tbody>
+		</table>
 	<?php
 		}
 

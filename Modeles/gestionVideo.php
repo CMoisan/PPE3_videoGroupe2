@@ -55,9 +55,8 @@ Class gestionVideo
 		$nb=0;
 		while ($nb<sizeof($resultat))
 			{
-			//ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $unLoginClient, $unPwdClient,$uneDateAbonnement, $estActifClient)
 			//instanciation du client et ajout de celui-ci dans la collection
-			$this->tousLesClients->ajouteUnClient($resultat[$nb][0],$resultat[$nb][1],$resultat[$nb][2],$resultat[$nb][8],$resultat[$nb][3],$resultat[$nb][5],$resultat[$nb][6],$resultat[$nb][4],$resultat[$nb][7]);
+			$this->tousLesClients->ajouteUnClient($resultat[$nb][0],$resultat[$nb][1],$resultat[$nb][2],$resultat[$nb][3],$resultat[$nb][4],$resultat[$nb][5],$resultat[$nb][6]);
 			$nb++;
 			
 			}
@@ -166,31 +165,19 @@ Class gestionVideo
 	{
 		$resultat=$this->tousLesClients->verificationExistanceClient($unLogin, $unPassword);
 		return $resultat;
-	}	
-
-	public function verifExistLogin($unLogin){
-		$resultat = $this->tousLesClients->VerificationExistLoginClient($unLogin);
-		return $resultat;
-	}
-	
-	public function verifActif($unLogin, $unPassword){
-		return $this->tousLesClients->verifActif($unLogin, $unPassword);
-	}
+	}			
 		
 
-	public function updateMdp($unMdp,$unLogin){
-		$this->maBD->updateMdp($unMdp,$unLogin);
-		$this->tousLesClients->updateMdp($unMdp,$unLogin);
-	}
+
 
 
 //METHODE INSERANT UN CLIENT----------------------------------------------------------------------------------------------------------
-	public function ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement)
+	public function ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement)
 		{
 		//insertion du client dans la base de données
-		$sonNumero = $this->maBD->insertClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement);
+		$sonNumero = $this->maBD->insertClient($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement);
 		//instanciation du client et ajout de celui-ci dans la collection
-		$this->tousLesClients->ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement,0);
+		$this->tousLesClients->ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement);
 		}
 	//METHODE INSERANT UN FILM----------------------------------------------------------------------------------------------------------
 	public function ajouteUnFilm($unIdFilm,$unTitreFilm, $unRealisateurFilm, $unIdGenre,$uneDureeFilm)
@@ -319,6 +306,17 @@ Class gestionVideo
 		{
 		return $this->tousLesEpisodes->listeDesEpisodes();
 		}		
+	public function listeSupportsSelonGenre()
+	{
+		echo'hello4';
+		//récupère l'id depuis l'irl 
+		$unIdGenre = $_GET['Id'];
+		//récupére la liste des supports d'un genre via la BDD
+	    $listeSupportsDunGenre = $this->donneSupportsDunGenre($unIdGenre); 
+		//retourne l'affichage de la liste précedement récupéré depuis le conteneurSupport
+		return $this->listeSelonGenre($listeSupportsDunGenre);
+		
+	}
 			
 	//METHODE RETOURNANT LA LISTE DES DIFFERENTS ELEMENTS DANS DES BALISES <SELECT>-----------------------------------------------------------------
 	public function lesClientsAuFormatHTML()
@@ -348,10 +346,7 @@ Class gestionVideo
 	public function lesEpisodesAuFormatHTML()
 		{
 		return $this->tousLesEpisodes->lesEpisodesAuFormatHTML();
-		}
-	public function prochainClient(){
-		return $this->tousLesClients->nbClient()+1;
-	}
+		}		
 
 		
 	}

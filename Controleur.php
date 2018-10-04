@@ -9,8 +9,8 @@ class Controleur
 	//---------------------------ATTRIBUTS PRIVES-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private $maVideotheque;
-	
-	
+
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//---------------------------CONSTRUCTEUR------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -18,8 +18,8 @@ class Controleur
 		{
 		$this->maVideotheque = new gestionVideo();
 		}
-		
-	
+
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//---------------------------METHODE D'AFFICHAGE DE L'ENTETE-----------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -28,9 +28,9 @@ class Controleur
 		//appel de la vue de l'entête
 		require 'Vues/entete.php';
 		}
-		
-		
-	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------	
+
+
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//---------------------------METHODE D'AFFICHAGE DU PIED DE PAGE------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	public function affichePiedPage()
@@ -38,8 +38,8 @@ class Controleur
 		//appel de la vue du pied de page
 		require 'Vues/piedPage.php';
 		}
-		
-		
+
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------METHODE D'AFFICHAGE DU MENU-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -48,8 +48,8 @@ class Controleur
 		//appel de la vue du menu
 		require 'Vues/menu.php';
 		}
-	
-	
+
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------METHODE D'AFFICHAGE DES VUES----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -75,61 +75,64 @@ class Controleur
 				break;
 			}
 		}
-			
-			
+
+
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//----------------------------Mon Compte--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private function vueCompte($action)
 		{
-			
+
 		//SELON l'action demandée
 		switch ($action)
-			{	
-			
+			{
+
 			//CAS visualisation de mes informations-------------------------------------------------------------------------------------------------
 			case 'visualiser' :
 				//ici il faut pouvoir avoir accès au information de l'internaute connecté
 				require 'Vues/construction.php';
 				break;
-				
+
 			//CAS enregistrement d'une modification sur le compte------------------------------------------------------------------------------
 			case 'modifier' :
 				// ici il faut pouvoir modifier le mot de passe de l'utilisateur
-				require 'Vues/construction.php';
-			/*	echo "<form href = 'index.php?vue=compte&action=confirmation' method='get'>
-					  <input type='text' name='OldPassword' value='Tapez votre mot de passe actuel'/><br>
-					  <input type='text' name='NewPassword' value='Tapez votre nouveau mot de passe'/><br>
-					  <input type='text' name='NewPassword2' value='Confirmez votre nouveau mot de passe'/><br>
-					  <input type='submit' value='Valider'/>";*/
-				
+				require 'Vues/modifier.php';
 				break;
 			//CAS ajouter un utilisateur ------------------------------------------------------------------------------
 			case 'nouveauLogin' :
 				// ici il faut pouvoir recuperer un nouveau utilisateur
-			$this->maVideotheque->ajouteUnClient($_GET['nomClient'], $_GET['prenomClient'], $_GET['emailClient'], $_GET['dateAbonnementClient'], $_GET['login'], $_GET['password']);
-				
-				break;	
+				$log = $_POST['login'];
+				$resultat=$this->maVideotheque->verifExistLogin($log);
+				if($resultat==1){
+					require 'Vues/trouve.php';
+				}
+				else{
+					$unIdClient = $this->maVideotheque->prochainClient();
+					$unNomClient= $_POST['nomClient'];
+					$unPrenomClient= $_POST['prenomClient'];
+					$unEmailClient= $_POST['emailClient'];
+					$uneDateNaissClient= $_POST['dateNaissClient'];
+					$uneDateAbonnement= $_POST['dateAbonnementClient'];
+					$login = $_POST['login'];
+					$passwd = $_POST['password'];
+					$this->maVideotheque->ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login,$passwd,$uneDateAbonnement);
+					require 'Vues/ajoutUtilisateur.php';
+				}
+				break;
 			//CAS verifier un utilisateur ------------------------------------------------------------------------------
 			case 'verifLogin' :
 				// ici il faut pouvoir vérifier un login un nouveau utilisateur
 				//Je récupère les login et password saisi et je verifie leur existancerequire
 				//pour cela je verifie dans le conteneurClient via la gestion.
-				$unLogin=$_GET['login'];
-				$unPassword=$_GET['password'];
+				$unLogin=$_POST['login'];
+				$unPassword=$_POST['password'];
 				$resultat=$this->maVideotheque->verifLogin($unLogin, $unPassword);
 						//si le client existe alors j'affiche le menu et la page visuGenre.php
 						if($resultat==1)
 						{
-							$actif = $this->maVideotheque->verifActif($unLogin);
-						//	echo $actif;
-							if ($actif == true)
-							{	require 'Vues/menu.php';
-									echo $this->maVideotheque->listeLesGenres();
-							}else
-							{
-								echo "votre cheque n'a pas encore été reçu";
-							}							
+								require 'Vues/menu.php';
+								echo $this->maVideotheque->listeLesGenres();
+
 						}
 						else
 						{
@@ -145,12 +148,22 @@ class Controleur
 									<meta http-equiv='refresh' content='1;index.php'>";
 						}
 				break;
-		/*	case 'confirmation':
-			$AncienMdp = $_POST['OldPassword'];
-			$NouveauMdp = $_POST['NewPassword'];
-			$NouveauMdp2 = $_POST['NewPassword2'];
-			if($AncienMdp == $maVideotheque)
-			break;*/
+				case 'modifMdp':
+					require 'Vues/modifMdp.php';
+					break;
+				case 'nvMdp':
+					$unMdp = $_POST['nvMdp'];
+					$this->maVideotheque->updateMdp($unMdp,$_SESSION['login']);
+					require 'Vues/okModifier.php';
+					break;
+
+				case "menu" :
+					if($this->maVideotheque->verifActif($_SESSION['login'],$_SESSION['password'])==1){
+						require 'Vues/menu.php';
+						echo $this->maVideotheque->listeLesGenres();
+					}
+
+					break;
 			}
 		}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -160,16 +173,16 @@ class Controleur
 		{
 		//SELON l'action demandée
 		switch ($action)
-			{	
-			
+			{
+
 			//CAS visualisation de tous les films-------------------------------------------------------------------------------------------------
 			case "visualiser" :
-				//ici il faut pouvoir visualiser l'ensemble des films 
+				//ici il faut pouvoir visualiser l'ensemble des films
 				require 'Vues/construction.php';
 				break;
-				
+
 			}
-		}	
+		}
 
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//----------------------------Serie--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -178,16 +191,16 @@ class Controleur
 		{
 		//SELON l'action demandée
 		switch ($action)
-			{	
-			
+			{
+
 			//CAS visualisation de toutes les Series-------------------------------------------------------------------------------------------------
 			case "visualiser" :
-				//ici il faut pouvoir visualiser l'ensemble des Séries 
+				//ici il faut pouvoir visualiser l'ensemble des Séries
 				require 'Vues/construction.php';
 				break;
-				
+
 			}
-		}			
+		}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//----------------------------Vidéotheque-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -195,8 +208,8 @@ class Controleur
 		{
 		//SELON l'action demandée
 		switch ($action)
-			{	
-			
+			{
+
 			//CAS Choix d'un genre------------------------------------------------------------------------------------------------
 			case "choixGenre" :
 				if ($this->maVideotheque->donneNbGenres()==0)
@@ -213,7 +226,7 @@ class Controleur
 					require 'Vues/voirRessource.php';
 					}
 				break;
-				
+
 			//CAS enregistrement d'une ressource dans la base------------------------------------------------------------------------------
 			case "enregistrer" :
 				$nom = $_POST['nomRessource'];
@@ -233,7 +246,7 @@ class Controleur
 					}
 				break;
 			}
-		}	
+		}
 
-	}	
+	}
 ?>

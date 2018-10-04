@@ -8,7 +8,6 @@ include 'Conteneurs/conteneurSaison.php';
 include 'Conteneurs/conteneurSerie.php';
 include 'Conteneurs/conteneurSupport.php';
 include 'accesBD.php';
-include 'sendMail.php';
 
 Class gestionVideo
 	{
@@ -21,7 +20,6 @@ Class gestionVideo
 	private $tousLesGenres;
 	private $toutesLesSaisons;
 	private $toutesLesSeries;
-	private $envoiMail;
 	private $maBD;
 	
 	//CONSTRUCTEUR--------------------------------------------------------------------------------------------------------------------------------
@@ -35,7 +33,7 @@ Class gestionVideo
 		$this->toutesLesSaisons = new conteneurSaison();
 		$this->tousLesEpisodes = new conteneurEpisode();
 		$this->tousLesEmprunts = new conteneurEmprunt();
-		$this->envoiMail = new sendMail();
+		
 		$this->maBD = new accesBD();
 		
 		$this->chargeLesClients();	
@@ -57,8 +55,9 @@ Class gestionVideo
 		$nb=0;
 		while ($nb<sizeof($resultat))
 			{
+			//ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $unLoginClient, $unPwdClient,$uneDateAbonnement, $estActifClient)
 			//instanciation du client et ajout de celui-ci dans la collection
-			$this->tousLesClients->ajouteUnClient($resultat[$nb][0],$resultat[$nb][1],$resultat[$nb][2],$resultat[$nb][3],$resultat[$nb][4],$resultat[$nb][5],$resultat[$nb][6],$resultat[$nb][7],$resultat[$nb][8]);
+			$this->tousLesClients->ajouteUnClient($resultat[$nb][0],$resultat[$nb][1],$resultat[$nb][2],$resultat[$nb][8],$resultat[$nb][3],$resultat[$nb][5],$resultat[$nb][6],$resultat[$nb][4],$resultat[$nb][7]);
 			$nb++;
 			
 			}
@@ -167,36 +166,31 @@ Class gestionVideo
 	{
 		$resultat=$this->tousLesClients->verificationExistanceClient($unLogin, $unPassword);
 		return $resultat;
-	}			
-	public function verifActif($unLogin)
-	{
-	//	echo $this->listeLesClients();
-		$result = $this->tousLesClients->verifActifClient($unLogin);
-	//	echo $result;
-		return $result;
+	}	
+
+	public function verifExistLogin($unLogin){
+		$resultat = $this->tousLesClients->VerificationExistLoginClient($unLogin);
+		return $resultat;
+	}
+	
+	public function verifActif($unLogin, $unPassword){
+		return $this->tousLesClients->verifActif($unLogin, $unPassword);
+	}
+		
+
+	public function updateMdp($unMdp,$unLogin){
+		$this->maBD->updateMdp($unMdp,$unLogin);
+		$this->tousLesClients->updateMdp($unMdp,$unLogin);
 	}
 
 
-
 //METHODE INSERANT UN CLIENT----------------------------------------------------------------------------------------------------------
-	public function ajouteUnClient($unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement, $unLoginClient, $unPwdClient)
+	public function ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement)
 		{
 		//insertion du client dans la base de données
-		//$uneDateAbonnement = (string) $uneDateAbonnement;
-		//echo $uneDateAbonnement;
-		
-		echo $this->donneNbClientsSuivant();
-		echo $unNomClient;
-		echo $unPrenomClient;
-		echo $unEmailClient;
-		echo $uneDateAbonnement;
-		echo $unLoginClient;
-		echo $unPwdClient;
-		//$date = str_replace('/', '-', $var);
-		$sonNumero = $this->maBD->insertClient($unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement, $unLoginClient, $unPwdClient);
+		$sonNumero = $this->maBD->insertClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement);
 		//instanciation du client et ajout de celui-ci dans la collection
-		$this->tousLesClients->ajouteUnClient($this->donneNbClientsSuivant(), $unNomClient, $unPrenomClient, $unEmailClient, $uneDateAbonnement, $unLoginClient, $unPwdClient, 0, 0);
-	//	$this->envoiMail->NouveauClient($this->donneNbClientsSuivant(),$unEmailClient);
+		$this->tousLesClients->ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login, $passwd,$uneDateAbonnement,0);
 		}
 	//METHODE INSERANT UN FILM----------------------------------------------------------------------------------------------------------
 	public function ajouteUnFilm($unIdFilm,$unTitreFilm, $unRealisateurFilm, $unIdGenre,$uneDureeFilm)
@@ -268,13 +262,7 @@ Class gestionVideo
 	//METHODE RETOURNANT LE NOMBRE DE CLIENT------------------------------------------------------------------------------------------------
 	public function donneNbClients()
 		{
-		return $this->tousLesClients->nbClient();
-		}
-	public function donneNbClientsSuivant()
-		{
-		$nb = $this->tousLesClients->nbClient();
-		$nb = $nb + 1;
-		return $nb;
+		return $this->tousLesClients->nbClients();
 		}
 
 	//METHODE RETOURNANT LE NOMBRE DE FIlMS----------------------------------------------------------------------------------------------
@@ -360,7 +348,10 @@ Class gestionVideo
 	public function lesEpisodesAuFormatHTML()
 		{
 		return $this->tousLesEpisodes->lesEpisodesAuFormatHTML();
-		}		
+		}
+	public function prochainClient(){
+		return $this->tousLesClients->nbClient()+1;
+	}
 
 		
 	}

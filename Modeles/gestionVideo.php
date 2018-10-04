@@ -306,6 +306,17 @@ Class gestionVideo
 		{
 		return $this->tousLesEpisodes->listeDesEpisodes();
 		}		
+	public function listeSupportsSelonGenre()
+	{
+		echo'hello4';
+		//récupère l'id depuis l'irl 
+		$unIdGenre = $_GET['Id'];
+		//récupére la liste des supports d'un genre via la BDD
+	    $listeSupportsDunGenre = $this->donneSupportsDunGenre($unIdGenre); 
+		//retourne l'affichage de la liste précedement récupéré depuis le conteneurSupport
+		return $this->listeSelonGenre($listeSupportsDunGenre);
+		
+	}
 			
 	//METHODE RETOURNANT LA LISTE DES DIFFERENTS ELEMENTS DANS DES BALISES <SELECT>-----------------------------------------------------------------
 	public function lesClientsAuFormatHTML()

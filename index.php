@@ -5,7 +5,9 @@ include 'Controleur.php';
 function chargerPage()
 {
 	$monControleur = new Controleur();
+	
 	$monControleur->afficheEntete();
+
 		if(isset($_GET['login']))
 		{
 				if ((isset($_GET['vue']))&& (isset($_GET['action'])))

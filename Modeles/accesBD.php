@@ -18,11 +18,11 @@ class accesBD
 	public function __construct()
 		{
 		// ORDI PROFSIO
-		$this->hote="PROFSIO\\SQLEXPRESS_2012";
+		$this->hote="172.16.0.50";
 		$this->port="";
-		$this->login="testcathy2";
-		$this->passwd="test";
-		$this->base="videoppe3";
+		$this->login="ALT18BRONDY";
+		$this->passwd="brondy123!";
+		$this->base="videoppe3groupe2";
 		
 		// ORDI DEV2
 		/*$this->hote = "localhost";
@@ -391,7 +391,33 @@ class accesBD
 		{
 			die('Erreur sur donneProchainIdentifiantEpisode : '+$requete->errorCode());
 		}
-		}	
+		}
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+	//Recupère les supports d'un genre donné en attribut -----------------------------------------------------------------------------------------------------------------------------------------
+	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+		public function donneSupportsDunGenre($unIdGenre)
+		{
+			$lesSupportsDunGenre=null;
+			$nbTuples=0;
+			echo 'hello1';
+			$requete = $this->con->prepare("SELECT * FROM support WHERE support.idGenre = Values(?) ORDER BY support.titreSupport");
+			$requete->bindValue($unIdGenre);
+			
+			if(!$requete->execute())
+			{
+				while($row = $query->fetch(PDO::FETCH_NUM))
+				{
+					$lesSupportsDunGenre[$nbTuples] = $row;
+					$nbTuples++;
+				}
+			}
+			else 
+			{
+				die("Erreur dans selectSupports : ".$requete->errorCode());
+			}
+			echo 'hello2';
+			return $lesSupportsDunGenre;
+		}			
 	}
 
 ?>

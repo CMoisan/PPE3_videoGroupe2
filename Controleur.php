@@ -39,7 +39,6 @@ class Controleur
 		require 'Vues/piedPage.php';
 		}
 
-
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//--------------------------METHODE D'AFFICHAGE DU MENU-----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +81,6 @@ class Controleur
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	private function vueCompte($action)
 		{
-
 		//SELON l'action demandée
 		switch ($action)
 			{
@@ -96,43 +94,27 @@ class Controleur
 			//CAS enregistrement d'une modification sur le compte------------------------------------------------------------------------------
 			case 'modifier' :
 				// ici il faut pouvoir modifier le mot de passe de l'utilisateur
-				require 'Vues/modifier.php';
+				require 'Vues/construction.php';
 				break;
 			//CAS ajouter un utilisateur ------------------------------------------------------------------------------
 			case 'nouveauLogin' :
 				// ici il faut pouvoir recuperer un nouveau utilisateur
-				$log = $_POST['login'];
-				$resultat=$this->maVideotheque->verifExistLogin($log);
-				if($resultat==1){
-					require 'Vues/trouve.php';
-				}
-				else{
-					$unIdClient = $this->maVideotheque->prochainClient();
-					$unNomClient= $_POST['nomClient'];
-					$unPrenomClient= $_POST['prenomClient'];
-					$unEmailClient= $_POST['emailClient'];
-					$uneDateNaissClient= $_POST['dateNaissClient'];
-					$uneDateAbonnement= $_POST['dateAbonnementClient'];
-					$login = $_POST['login'];
-					$passwd = $_POST['password'];
-					$this->maVideotheque->ajouteUnClient($unIdClient, $unNomClient, $unPrenomClient, $uneDateNaissClient, $unEmailClient, $login,$passwd,$uneDateAbonnement);
-					require 'Vues/ajoutUtilisateur.php';
-				}
+				require 'Vues/construction.php';
 				break;
 			//CAS verifier un utilisateur ------------------------------------------------------------------------------
 			case 'verifLogin' :
 				// ici il faut pouvoir vérifier un login un nouveau utilisateur
 				//Je récupère les login et password saisi et je verifie leur existancerequire
 				//pour cela je verifie dans le conteneurClient via la gestion.
-				$unLogin=$_POST['login'];
-				$unPassword=$_POST['password'];
+				$unLogin=$_GET['login'];
+				$unPassword=$_GET['password'];
 				$resultat=$this->maVideotheque->verifLogin($unLogin, $unPassword);
 						//si le client existe alors j'affiche le menu et la page visuGenre.php
 						if($resultat==1)
 						{
-								require 'Vues/menu.php';
-								echo $this->maVideotheque->listeLesGenres();
-
+							//echo $_SESSION['login'];
+							require 'Vues/menu.php';
+							echo $this->maVideotheque->listeLesGenres();
 						}
 						else
 						{
@@ -148,22 +130,6 @@ class Controleur
 									<meta http-equiv='refresh' content='1;index.php'>";
 						}
 				break;
-				case 'modifMdp':
-					require 'Vues/modifMdp.php';
-					break;
-				case 'nvMdp':
-					$unMdp = $_POST['nvMdp'];
-					$this->maVideotheque->updateMdp($unMdp,$_SESSION['login']);
-					require 'Vues/okModifier.php';
-					break;
-
-				case "menu" :
-					if($this->maVideotheque->verifActif($_SESSION['login'],$_SESSION['password'])==1){
-						require 'Vues/menu.php';
-						echo $this->maVideotheque->listeLesGenres();
-					}
-
-					break;
 			}
 		}
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -180,6 +146,9 @@ class Controleur
 				//ici il faut pouvoir visualiser l'ensemble des films
 				require 'Vues/construction.php';
 				break;
+		 case "genrefilm" :
+
+		 require 'Vues/Affichage.php';
 
 			}
 		}
@@ -204,7 +173,7 @@ class Controleur
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//----------------------------Vidéotheque-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	//-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-	private function vueVideotheque($action)
+	private function vueRessource($action)
 		{
 		//SELON l'action demandée
 		switch ($action)
@@ -222,7 +191,7 @@ class Controleur
 					}
 				else
 					{
-					$_SESSION['lesRessources'] = $this->maMairie->listeLesRessources();
+					$_SESSION['lesRessources'] = $this->maVideotheque->listeSupportsSelonGenre();
 					require 'Vues/voirRessource.php';
 					}
 				break;

@@ -71,8 +71,58 @@ Class conteneurSupport
 				$iSupport->next();
 			}
 			return $leBonSupport;
+			
 		}
-	
+	/*
+	//METHODE RETOURNANT un tableau de support a partir du numéro du genre demandé (a récuperer en get dans gestion)--------------------------------------------	
+	public function tableauSelonGenre($unIdGenre)
+		{
+				$tableau =array();
+				foreach ($this->lesSupports as $unSupport)
+				{
+					If ($unSupport->getIdSupport == $unIdGenre)
+					{
+						$leTitre = $unSupport->getTitreSupport();
+						$laPhoto = $unGenre-> getImageSupport();
+						$tableau[$leTitre] = $laPhoto;
+					}
+				}
+				return $tableau;
+			
+		}
+		*/
+	//METHODE RETOURNANT Donne la liste des supports d'un genre (depuis gestion) et renvoie l'affichage (a gestion) ----------------------------------------------------------------------------------------
+	public function listeSelonGenre($uneListe)
+		{
+			?>
+			<table>
+				</body>
+				<tbody>
+			<tr>
+			<?php
+				
+				$compteurTD = 0;
+				foreach ($uneListe as $unSupport)
+				{
+					$compteurTD = $compteurTD+1;
+					$photo = $unSupport->getImageSupport();
+					$titre = $unSupport->getTitreSupport();
+					
+					echo '<td><div class="photoContainer"><img class="accueilPhotosPays" src=Images/'.$photo.'>';
+					echo '<div class="accueilPhotosPaysOverlay"><div class="textOverlay">'.$titre.'</div></div></div></td>';
+					if (($compteurTD % 4) == 0) 
+					{
+						
+						echo '</tr><tr>';
+					}
+				}
+			?>
+				</tr>
+					</tbody>
+				</table>
+			<?php
+		}
+		
 	
 	}
 	

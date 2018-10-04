@@ -6,7 +6,7 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Voir tous les films</a></li>
                     </ul>
-                </ul>    
+                </ul>
             </li>
             <li class="nav-item active">
                 <ul class="dropdown">
@@ -14,8 +14,9 @@
                     <ul class="dropdown-menu">
                         <li><a href="#">Voir toutes les séries</a></li>
                     </ul>
-                </ul>    
+                </ul>
             </li>
+            <input type="button" value="page précédente" onclick="javascript:history.back()">
         </ul>
 
         <ul class="nav navbar-nav ml-auto pos-avatar justify-content-end">
@@ -30,7 +31,7 @@
 						<li><a href='index.php?vue=compte&action=visuEmprunt'>Visualiser mes Emprunts</a></li>
 						<li><a href='index.php?action=visualiser&vue=accueil'>Se déconnecter</a></li>
                     </ul>
-                </ul>    
+                </ul>
             </li>
         </ul>
     </div>

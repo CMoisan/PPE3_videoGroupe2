@@ -8,7 +8,7 @@ body
    margin-top: -24px !important;
    background-color: #000000 !important;
 }
- 
+
 .avatar
 {
     width: 30px;
@@ -18,14 +18,14 @@ body
     margin-left: -5px;
     border-radius: 50%;
 }
- 
+
 .btn-avatar
 {
     background-color: transparent !important;
     border: none !important;
     padding: 0 !important;
 }
-  
+
 .pos-avatar
 {
     width: 50px;
@@ -56,6 +56,39 @@ body
     text-align: center;
 }
 
+.photoContainer:hover .accueilPhotosPaysOverlay {
+  opacity: 0.7;
+}
+
+.accueilPhotosPays{
+  width: 348px ;
+  height: 200px;
+margin-left: 100px;
+margin-top : 100px;
+}
+
+.textOverlay {
+  color: white;
+  font-size: 20px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.accueilPhotosPaysOverlay {
+  position: relative;
+  margin-top:-200px;
+  margin-left: 100px;
+  height: 200px;
+  width: 348px;
+  opacity: 0;
+  transition: .5s ease;
+  background-color: #2b2b28;
+}
+
 .text-red
 {
     color: red;
@@ -64,4 +97,14 @@ body
 .text-small
 {
     font-size: 12px;
+}
+
+input[type=button], input[type=submit], input[type=reset] {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 16px 32px;
+    text-decoration: none;
+    margin: 4px 2px;
+    cursor: pointer;
 }

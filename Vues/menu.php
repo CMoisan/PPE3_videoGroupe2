@@ -29,7 +29,7 @@
                         <li><a href="index.php?vue=compte&action=visualiser">Voir mon profil</a></li>
                         <li><a href='index.php?vue=compte&action=modifier'>Modifier mon profil</a></li>
 						<li><a href='index.php?vue=compte&action=visuEmprunt'>Visualiser mes Emprunts</a></li>
-						<li><a href='index.php?action=visualiser&vue=accueil'>Se déconnecter</a></li>
+						<li><a href='index.php?vue=accueil'>Se déconnecter</a></li>
                     </ul>
                 </ul>
             </li>
